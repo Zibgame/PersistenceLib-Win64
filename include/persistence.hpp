@@ -7,7 +7,9 @@
 enum PersistType
 {
     REGISTRY,
-    WMI // Windows Management Instrumentation
+    WMI, // Windows Management Instrumentation
+    TASK,
+    STARTUP
 };  
 
 bool persist_install(PersistType type, const std::string& path);
@@ -23,3 +25,12 @@ bool registry_detect(void);
 bool wmi_install(const std::string& path);
 bool wmi_remove(void);
 bool wmi_detect(void);
+
+#define TASK_NAME "PERSIST_LIB_TASK"
+bool task_install(const std::string& path);
+bool task_remove(void);
+bool task_detect(void);
+
+bool startup_install(const std::string& path);
+bool startup_remove(void);
+bool startup_detect(void);
