@@ -1,4 +1,4 @@
-# 🔐 PersistenceLib-Win64
+# ♾️ PersistenceLib-Win64
 
 A lightweight C++ library for managing Windows persistence mechanisms with a clean, modular API.
 
