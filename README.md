@@ -1,8 +1,8 @@
 # ♾️ PersistenceLib-Win64
 
-A lightweight C++ library for managing Windows persistence mechanisms with a clean, modular API.
+A lightweight and modular C++ library for managing Windows persistence mechanisms through a clean and explicit API.
 
-Designed for low-level developers, cybersecurity enthusiasts, and system programmers who want precise control over persistence techniques without unnecessary abstraction.
+Designed for low-level developers, cybersecurity practitioners, and system programmers who need precise control over persistence techniques without unnecessary abstraction.
 
 ---
 
@@ -12,6 +12,7 @@ Designed for low-level developers, cybersecurity enthusiasts, and system program
 * 🧠 Simple and explicit API
 * 🔄 Install / Detect / Remove workflow
 * 🪟 Windows Registry persistence (Run key)
+* 🧬 WMI event-based persistence (Filter / Consumer / Binding)
 * 📦 Static library (.a) ready for integration
 
 ---
@@ -29,6 +30,10 @@ src/
         registry_install.cpp
         registry_detect.cpp
         registry_remove.cpp
+    wmi/
+        wmi_install.cpp
+        wmi_detect.cpp
+        wmi_remove.cpp
     utils/
         path.cpp
     examples/
@@ -36,7 +41,7 @@ src/
 
 build/
     libpersistence.a
-    basic.exe
+    *.exe
 ```
 
 ---
@@ -80,7 +85,8 @@ g++ main.cpp -Iinclude -Lbuild -lpersistence -o app.exe
 ```
 enum PersistType
 {
-    REGISTRY
+    REGISTRY,
+    WMI
 };
 ```
 
@@ -134,11 +140,13 @@ int main()
     std::string path = get_self_path();
 
     persist_install(REGISTRY, path);
+    persist_install(WMI, path);
 
     if (persist_detect(REGISTRY))
-    {
         persist_remove(REGISTRY);
-    }
+
+    if (persist_detect(WMI))
+        persist_remove(WMI);
 
     return 0;
 }
@@ -146,17 +154,37 @@ int main()
 
 ---
 
-## 🪟 Registry Method Details
+## 🪟 Registry Persistence
 
-This module leverages the Windows Run key:
+Uses the Windows Run key:
 
 ```
 HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
 ```
 
 * ⚡ No admin privileges required
-* 🧾 Stores executable path as a string value
-* 🔁 Executed automatically at user logon
+* 🧾 Stores executable path
+* 🔁 Executed at user logon
+
+---
+
+## 🧬 WMI Persistence
+
+Implements event-based persistence using:
+
+* `__EventFilter`
+* `CommandLineEventConsumer`
+* `__FilterToConsumerBinding`
+
+Trigger example:
+
+```
+SELECT * FROM Win32_LogonSession
+```
+
+* 🧠 Event-driven execution
+* 🕵️ More stealth than registry-based methods
+* ⚠️ May require elevated privileges depending on environment
 
 ---
 
@@ -164,6 +192,7 @@ HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
 
 * Always use absolute paths
 * Ensure the binary exists at runtime
+* WMI persistence may be restricted by system policies or security tools
 * Designed for extensibility (startup folder, scheduled tasks, etc.)
 
 ---
@@ -171,8 +200,9 @@ HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
 ## 🎯 Roadmap
 
 * 📁 Startup folder persistence
-* ⏱ Scheduled task integration
-* 🧬 Multi-method persistence orchestration
+* ⏱ Scheduled task persistence
+* 🧬 Multi-method orchestration
+* 🔒 Improved stealth execution (no PowerShell)
 
 ---
 
