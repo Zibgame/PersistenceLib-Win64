@@ -7,8 +7,11 @@ SRC = \
 	src/core/persistence.cpp \
 	src\registry\registry_detect.cpp \
 	src\registry\registry_install.cpp \
-	src\utils\path.cpp \
-	src\registry\registry_remove.cpp
+	src\registry\registry_remove.cpp \
+	src\wmi\wmi_detect.cpp \
+	src\wmi\wmi_install.cpp \
+	src\wmi\wmi_remove.cpp \
+	src\utils\path.cpp 
 
 OBJ = $(SRC:.cpp=.o)
 
@@ -38,6 +41,7 @@ $(BUILD_DIR)/%.exe: $(EXAMPLES_DIR)/%.cpp
 clean:
 	del /f /q src\core\*.o 2>nul || exit 0
 	del /f /q src\registry\*.o 2>nul || exit 0
+	del /f /q src\wmi\*.o 2>nul || exit 0
 	del /f /q src\utils\*.o 2>nul || exit 0
 
 fclean: clean
